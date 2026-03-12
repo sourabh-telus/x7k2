@@ -660,12 +660,17 @@ let pollTimer=null, timerInterval=null, selectedGif=null, hasVoted=false, hasSub
 let myVoteBatch=[];
 let selectedMode='fun';
 let reactionPollTimer=null, lastReactionTs=Date.now();
-let FIREBASE_URL='';
+let FIREBASE_URL='https://gif-team-3dbcd-default-rtdb.firebaseio.com';
 
 // ============================================================
 // FIREBASE SETUP
 // ============================================================
 function initFirebase() {
+  // If URL is already embedded/hard-coded, skip setup screen entirely
+  if (FIREBASE_URL && FIREBASE_URL.includes('firebaseio.com')) {
+    showScreen('landing');
+    return;
+  }
   const saved = localStorage.getItem('gifbattle_firebase_url');
   if (saved && saved !== 'YOUR_FIREBASE_URL_HERE' && saved.includes('firebaseio.com')) {
     FIREBASE_URL = saved;
@@ -1281,7 +1286,7 @@ function showGifPreview(event,url){
   positionTooltip(event);
 }
 function hideGifPreview(){document.getElementById('gif-tooltip').style.display='none';}
-document.addEventListener('mousemove',e=>{const tooltip=document.getElementById('gif-tooltip');if(tooltip.style.display==='block')positionTooltip(e);});
+document.addEventListener('mousemove',e=>{const tooltip=document.getElementById('gif-tooltip');if(tooltip&&tooltip.style.display==='block')positionTooltip(e);});
 function positionTooltip(e){
   const tooltip=document.getElementById('gif-tooltip');
   const x=e.clientX+16,y=e.clientY-100;
